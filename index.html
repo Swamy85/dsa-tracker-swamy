@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kotari Swamy — DSA Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--accent:#00d4aa;--accent-rgb:0,212,170;--easy:#00b8a3;--medium:#f5a623;--hard:#ef4444;--font-main:'Sora',sans-serif;--font-mono:'JetBrains Mono',monospace;--radius:12px;--radius-sm:8px;--transition:0.2s cubic-bezier(0.4,0,0.2,1)}
+[data-theme="dark"]{--bg:#0d1117;--bg2:#161b22;--bg3:#1c2333;--bg4:#21262d;--border:#30363d;--text:#e6edf3;--text2:#8b949e;--text3:#6e7681;--card:#161b22;--nav-bg:rgba(13,17,23,0.9)}
+[data-theme="light"]{--bg:#f6f8fa;--bg2:#ffffff;--bg3:#f0f4f8;--bg4:#e8edf2;--border:#d0d7de;--text:#1f2328;--text2:#656d76;--text3:#9198a1;--card:#ffffff;--nav-bg:rgba(246,248,250,0.92)}
+[data-theme="amoled"]{--bg:#000000;--bg2:#0a0a0a;--bg3:#111111;--bg4:#1a1a1a;--border:#2a2a2a;--text:#ffffff;--text2:#aaaaaa;--text3:#666666;--card:#0a0a0a;--nav-bg:rgba(0,0,0,0.96)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-main);background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;transition:background 0.3s,color 0.3s}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:99px}
+::-webkit-scrollbar-thumb:hover{background:var(--accent)}
+.navbar{position:fixed;top:0;left:0;right:0;height:58px;background:var(--nav-bg);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 18px;gap:14px;z-index:1000;transition:background 0.3s}
+.nav-logo{display:flex;align-items:center;gap:10px;font-family:var(--font-mono);font-weight:700;font-size:15px;color:var(--text);text-decoration:none;white-space:nowrap}
+.logo-icon{width:30px;height:30px;background:linear-gradient(135deg,var(--accent),#7c6cfa);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff}
+.nav-tagline{font-size:10px;color:var(--text3);font-family:var(--font-mono)}
+.nav-spacer{flex:1}
+.nav-search{position:relative;display:flex;align-items:center}
+.nav-search input{background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:7px 12px 7px 34px;border-radius:8px;font-family:var(--font-main);font-size:13px;width:230px;outline:none;transition:border-color var(--transition),width var(--transition)}
+.nav-search input:focus{border-color:var(--accent);width:270px}
+.nav-search .si{position:absolute;left:10px;color:var(--text3);font-size:13px;pointer-events:none}
+.nav-streak{display:flex;align-items:center;gap:5px;background:var(--bg3);border:1px solid var(--border);padding:6px 11px;border-radius:8px;font-size:12px;font-weight:500;cursor:pointer;transition:border-color var(--transition)}
+.nav-streak:hover{border-color:#f5a623}
+.streak-val{font-family:var(--font-mono);font-weight:700;color:#f5a623}
+.theme-controls{display:flex;align-items:center;gap:5px}
+.theme-btn{width:30px;height:30px;border-radius:7px;border:1px solid var(--border);background:var(--bg3);color:var(--text2);font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all var(--transition)}
+.theme-btn:hover,.theme-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(var(--accent-rgb),0.1)}
+.accent-picker{display:flex;gap:4px;align-items:center}
+.accent-dot{width:18px;height:18px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:transform var(--transition),border-color var(--transition)}
+.accent-dot:hover{transform:scale(1.2)}
+.accent-dot.active{border-color:var(--text)}
+.hamburger{display:none;flex-direction:column;gap:4px;cursor:pointer;padding:4px;background:none;border:none}
+.hamburger span{display:block;width:20px;height:2px;background:var(--text);border-radius:2px;transition:all 0.3s}
+.app-layout{display:flex;margin-top:58px;min-height:calc(100vh - 58px)}
+.sidebar{width:250px;background:var(--bg);border-right:1px solid var(--border);position:fixed;top:58px;left:0;bottom:0;overflow-y:auto;z-index:900;transition:transform 0.3s cubic-bezier(0.4,0,0.2,1),background 0.3s}
+.sidebar-inner{padding:12px 0}
+.sl{padding:7px 18px 3px;font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--text3);font-family:var(--font-mono)}
+.si-item{display:flex;align-items:center;padding:8px 18px;cursor:pointer;gap:9px;transition:background var(--transition),color var(--transition);border-left:3px solid transparent;font-size:12.5px;color:var(--text2);user-select:none}
+.si-item:hover{background:var(--bg3);color:var(--text)}
+.si-item.active{background:rgba(var(--accent-rgb),0.1);color:var(--accent);border-left-color:var(--accent);font-weight:600}
+.si-icon{font-size:14px;min-width:18px;text-align:center}
+.si-name{flex:1}
+.si-badge{background:var(--bg4);border:1px solid var(--border);border-radius:99px;padding:1px 7px;font-size:10px;font-family:var(--font-mono);color:var(--text3);white-space:nowrap}
+.si-item.active .si-badge{background:rgba(var(--accent-rgb),0.15);border-color:var(--accent);color:var(--accent)}
+.main-content{margin-left:250px;flex:1;margin-top:20px;padding:22px;max-width:calc(100vw - 250px);transition:margin var(--transition)}
+.stats-grid{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:14px;margin-bottom:20px;margin-top:58px;}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px;position:relative;overflow:hidden;transition:border-color var(--transition),transform var(--transition);animation:fsu 0.4s ease both}
+.stat-card:hover{border-color:var(--accent);transform:translateY(-2px)}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:var(--radius) var(--radius) 0 0}
+.stat-card.total::before{background:linear-gradient(90deg,var(--accent),#7c6cfa)}
+.stat-card.ec::before{background:var(--easy)}
+.stat-card.mc::before{background:var(--medium)}
+.stat-card.hc::before{background:var(--hard)}
+.stat-label{font-size:10px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:var(--text3);font-family:var(--font-mono);margin-bottom:10px}
+.stat-row{display:flex;align-items:flex-end;gap:10px}
+.stat-num{font-family:var(--font-mono);font-size:30px;font-weight:700;line-height:1}
+.stat-den{font-size:13px;color:var(--text3);font-family:var(--font-mono);margin-bottom:2px}
+.stat-prog{margin-top:10px;height:4px;background:var(--bg4);border-radius:99px;overflow:hidden}
+.stat-prog-bar{height:100%;border-radius:99px;transition:width 1s cubic-bezier(0.4,0,0.2,1)}
+.total .stat-prog-bar{background:linear-gradient(90deg,var(--accent),#7c6cfa)}
+.ec .stat-prog-bar{background:var(--easy)}
+.mc .stat-prog-bar{background:var(--medium)}
+.hc .stat-prog-bar{background:var(--hard)}
+.overview-row{display:grid;grid-template-columns:270px 1fr;gap:14px;margin-bottom:20px}
+.circle-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;display:flex;flex-direction:column;align-items:center;gap:14px;animation:fsu 0.5s ease both}
+.circle-card h3{font-size:12px;font-weight:600;color:var(--text2);text-align:center}
+.circular-progress{position:relative;width:150px;height:150px}
+.circular-progress svg{transform:rotate(-90deg)}
+.cp-bg{fill:none;stroke:var(--bg4);stroke-width:10}
+.cp-fill{fill:none;stroke-width:10;stroke-linecap:round;stroke:var(--accent);stroke-dasharray:408;stroke-dashoffset:408;transition:stroke-dashoffset 1.2s cubic-bezier(0.4,0,0.2,1);filter:drop-shadow(0 0 8px rgba(var(--accent-rgb),0.5))}
+.cp-text{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}
+.cp-pct{font-family:var(--font-mono);font-size:26px;font-weight:700;line-height:1}
+.cp-sub{font-size:10px;color:var(--text3);margin-top:2px}
+.diff-legend{display:flex;flex-direction:column;gap:7px;width:100%}
+.dli{display:flex;align-items:center;gap:8px}
+.ddot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.dll{font-size:12px;color:var(--text2);flex:1}
+.dlv{font-size:12px;font-family:var(--font-mono);font-weight:600}
+.analytics-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px;animation:fsu 0.5s ease both;display:flex;flex-direction:column;gap:14px}
+.analytics-card h3{font-size:12px;font-weight:600;color:var(--text2);display:flex;align-items:center;gap:7px}
+.am{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.mbox{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:11px;text-align:center}
+.mval{font-family:var(--font-mono);font-size:20px;font-weight:700;color:var(--accent)}
+.mlabel{font-size:10px;color:var(--text3);margin-top:3px}
+.hrow{display:flex;gap:3px;flex-wrap:wrap}
+.hcell{width:13px;height:13px;border-radius:3px;background:var(--bg4);transition:background var(--transition)}
+.hcell.h1{background:rgba(var(--accent-rgb),0.2)}
+.hcell.h2{background:rgba(var(--accent-rgb),0.45)}
+.hcell.h3{background:rgba(var(--accent-rgb),0.7)}
+.hcell.h4{background:var(--accent)}
+.chart-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px}
+.chart-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px;animation:fsu 0.6s ease both}
+.chart-card h3{font-size:12px;font-weight:600;color:var(--text2);margin-bottom:14px}
+.cbars{display:flex;flex-direction:column;gap:9px}
+.cbr{display:flex;align-items:center;gap:9px}
+.cbl{font-size:10px;color:var(--text2);width:110px;text-align:right;font-family:var(--font-mono);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cbt{flex:1;height:14px;background:var(--bg4);border-radius:99px;overflow:hidden}
+.cbf{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--accent),#7c6cfa);transition:width 1s cubic-bezier(0.4,0,0.2,1)}
+.cbv{font-size:10px;font-family:var(--font-mono);color:var(--text3);width:38px}
+.diff-chart{display:flex;gap:14px;align-items:flex-end;justify-content:center;height:110px;padding:0 16px}
+.dbc{display:flex;flex-direction:column;align-items:center;gap:5px;flex:1}
+.dbcont{width:100%;flex:1;display:flex;align-items:flex-end}
+.dbf{width:100%;border-radius:6px 6px 0 0;transition:height 1s cubic-bezier(0.4,0,0.2,1)}
+.dbn{font-size:10px;color:var(--text3)}
+.dbcount{font-size:12px;font-family:var(--font-mono);font-weight:700}
+.controls-bar{display:flex;align-items:center;gap:9px;margin-bottom:14px;flex-wrap:wrap}
+.controls-bar h2{font-size:15px;font-weight:700;color:var(--text);margin-right:2px}
+.ctrl-spacer{flex:1}
+.fbg{display:flex;gap:3px}
+.fb{padding:6px 13px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--bg3);color:var(--text2);font-size:12px;font-weight:500;cursor:pointer;transition:all var(--transition);font-family:var(--font-main)}
+.fb:hover{border-color:var(--accent);color:var(--text)}
+.fb.active{background:rgba(var(--accent-rgb),0.12);border-color:var(--accent);color:var(--accent);font-weight:600}
+.dc{display:flex;gap:4px}
+.dchip{padding:5px 11px;border-radius:99px;border:1px solid var(--border);background:var(--bg3);font-size:11px;font-weight:600;cursor:pointer;transition:all var(--transition);font-family:var(--font-main)}
+.dchip:hover{transform:scale(1.05)}
+.dchip.easy{color:var(--easy)}.dchip.easy.active{background:rgba(0,184,163,0.12);border-color:var(--easy)}
+.dchip.medium{color:var(--medium)}.dchip.medium.active{background:rgba(245,166,35,0.12);border-color:var(--medium)}
+.dchip.hard{color:var(--hard)}.dchip.hard.active{background:rgba(239,68,68,0.12);border-color:var(--hard)}
+.sort-sel{padding:6px 26px 6px 10px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--bg3);color:var(--text2);font-size:12px;cursor:pointer;outline:none;font-family:var(--font-main);appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%238b949e'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;transition:border-color var(--transition)}
+.sort-sel:focus{border-color:var(--accent)}
+.ab{padding:6px 12px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--bg3);color:var(--text2);font-size:12px;font-weight:500;cursor:pointer;transition:all var(--transition);display:flex;align-items:center;gap:5px;font-family:var(--font-main);white-space:nowrap}
+.ab:hover{border-color:var(--accent);color:var(--text)}
+.ab.danger:hover{border-color:var(--hard);color:var(--hard)}
+.ab.success:hover{border-color:var(--easy);color:var(--easy)}
+.problems-container{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.pt{width:100%;border-collapse:collapse}
+.pt thead{background:var(--bg3);border-bottom:1px solid var(--border)}
+.pt th{padding:9px 14px;text-align:left;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.09em;color:var(--text3);font-family:var(--font-mono);white-space:nowrap}
+.pr{border-bottom:1px solid var(--border);transition:background var(--transition);animation:fi 0.25s ease both}
+.pr:hover{background:var(--bg3)}
+.pr:last-child{border-bottom:none}
+.pr td{padding:11px 14px;vertical-align:middle}
+.pchk{width:18px;height:18px;border-radius:5px;border:2px solid var(--border);appearance:none;cursor:pointer;position:relative;transition:all var(--transition);display:block}
+.pchk:hover{border-color:var(--accent)}
+.pchk:checked{background:var(--accent);border-color:var(--accent)}
+.pchk:checked::after{content:'✓';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#fff;font-size:11px;font-weight:700}
+.pnl{color:var(--text);text-decoration:none;font-size:13px;font-weight:500;transition:color var(--transition);display:inline-flex;align-items:center;gap:5px}
+.pnl:hover{color:var(--accent)}
+.pnl .ei{opacity:0;font-size:10px;transition:opacity var(--transition)}
+.pnl:hover .ei{opacity:1}
+.pr.solved .pnl{text-decoration:line-through;color:var(--text3)}
+.pr.solved .pnl:hover{color:var(--accent);text-decoration:line-through}
+.db{padding:2px 9px;border-radius:99px;font-size:10px;font-weight:600;font-family:var(--font-mono);display:inline-block}
+.db.easy{color:var(--easy);background:rgba(0,184,163,0.1)}
+.db.medium{color:var(--medium);background:rgba(245,166,35,0.1)}
+.db.hard{color:var(--hard);background:rgba(239,68,68,0.1)}
+.ttag{padding:2px 9px;border-radius:6px;font-size:10px;font-weight:500;background:var(--bg4);border:1px solid var(--border);color:var(--text3);font-family:var(--font-mono);cursor:pointer;transition:all var(--transition);white-space:nowrap}
+.ttag:hover{border-color:#7c6cfa;color:#7c6cfa}
+.tcell{font-size:11px;font-family:var(--font-mono);color:var(--text3);display:flex;align-items:center;gap:4px}
+.tsb{width:20px;height:20px;border-radius:50%;border:1px solid var(--border);background:transparent;cursor:pointer;color:var(--text3);font-size:9px;display:flex;align-items:center;justify-content:center;transition:all var(--transition)}
+.tsb:hover{border-color:var(--accent);color:var(--accent)}
+.tsb.running{border-color:#f5a623;color:#f5a623;animation:pulse 1s infinite}
+.empty-state{padding:50px 20px;text-align:center;color:var(--text3)}
+.empty-state .ei2{font-size:36px;margin-bottom:10px}
+.empty-state p{font-size:13px}
+.pagination{display:flex;align-items:center;justify-content:space-between;padding:11px 14px;border-top:1px solid var(--border);background:var(--bg3)}
+.page-info{font-size:11px;color:var(--text3);font-family:var(--font-mono)}
+.page-btns{display:flex;gap:3px}
+.pbtn{width:28px;height:28px;border-radius:6px;border:1px solid var(--border);background:var(--bg4);color:var(--text2);font-size:11px;font-family:var(--font-mono);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all var(--transition)}
+.pbtn:hover,.pbtn.active{border-color:var(--accent);color:var(--accent);background:rgba(var(--accent-rgb),0.1)}
+.pbtn:disabled{opacity:0.3;cursor:not-allowed}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(4px);z-index:2000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.2s}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:26px;max-width:400px;width:90%;transform:scale(0.9) translateY(20px);transition:transform 0.2s}
+.modal-overlay.open .modal{transform:scale(1) translateY(0)}
+.modal h3{font-size:15px;font-weight:700;margin-bottom:7px}
+.modal p{font-size:12px;color:var(--text2);margin-bottom:18px}
+.modal-actions{display:flex;gap:9px;justify-content:flex-end}
+.mb{padding:7px 16px;border-radius:var(--radius-sm);border:none;font-family:var(--font-main);font-size:12px;font-weight:600;cursor:pointer;transition:all var(--transition)}
+.mb.cancel{background:var(--bg4);color:var(--text2)}.mb.cancel:hover{background:var(--bg3)}
+.mb.confirm{background:var(--hard);color:#fff}.mb.confirm:hover{filter:brightness(1.1)}
+.toast-container{position:fixed;bottom:18px;right:18px;z-index:3000;display:flex;flex-direction:column;gap:7px}
+.toast{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:11px 14px;font-size:12px;color:var(--text);display:flex;align-items:center;gap:9px;animation:ti 0.3s ease;box-shadow:0 8px 24px rgba(0,0,0,0.3);max-width:280px}
+.toast.success{border-left:3px solid var(--easy)}.toast.error{border-left:3px solid var(--hard)}.toast.info{border-left:3px solid var(--accent)}
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:850}
+.sidebar-overlay.open{display:block}
+@keyframes fsu{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fi{from{opacity:0}to{opacity:1}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
+@keyframes ti{from{opacity:0;transform:translateX(18px)}to{opacity:1;transform:translateX(0)}}
+@media(max-width:1200px){.stats-grid{grid-template-columns:1fr 1fr}.overview-row{grid-template-columns:220px 1fr}}
+@media(max-width:900px){.sidebar{transform:translateX(-100%)}.sidebar.open{transform:translateX(0)}.main-content{margin-left:0;max-width:100vw}.hamburger{display:flex}.overview-row{grid-template-columns:1fr}.chart-row{grid-template-columns:1fr}.nav-search{display:none}.nav-tagline{display:none}}
+@media(max-width:640px){.stats-grid{grid-template-columns:1fr 1fr}.main-content{padding:14px}.am{grid-template-columns:1fr 1fr}.pt th:nth-child(5),.pr td:nth-child(5){display:none}}
+@media(max-width:400px){.stats-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<nav class="navbar">
+  <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+  <a class="nav-logo" href="#">
+    <div class="logo-icon">KS</div>
+    <div><div>Kotari Swamy</div><div class="nav-tagline">DSA Tracker · 191 Problems</div></div>
+  </a>
+  <div class="nav-spacer"></div>
+  <div class="nav-search"><span class="si">🔍</span><input type="text" id="searchInput" placeholder="Search problems..." autocomplete="off"></div>
+  <div class="nav-streak" id="streakBtn" title="Your streak">
+    <span>🔥</span><span class="streak-val" id="streakDisplay">0</span><span style="font-size:10px;color:var(--text3)">streak</span>
+  </div>
+  <div class="theme-controls">
+    <button class="theme-btn" data-theme="dark" title="Dark">🌙</button>
+    <button class="theme-btn" data-theme="light" title="Light">☀️</button>
+    <button class="theme-btn" data-theme="amoled" title="AMOLED">◼</button>
+    <div class="accent-picker" id="accentPicker">
+      <div class="accent-dot active" data-color="#00d4aa" style="background:#00d4aa" title="Teal"></div>
+      <div class="accent-dot" data-color="#7c6cfa" style="background:#7c6cfa" title="Purple"></div>
+      <div class="accent-dot" data-color="#f59e0b" style="background:#f59e0b" title="Amber"></div>
+      <div class="accent-dot" data-color="#3b82f6" style="background:#3b82f6" title="Blue"></div>
+      <div class="accent-dot" data-color="#ec4899" style="background:#ec4899" title="Pink"></div>
+    </div>
+  </div>
+</nav>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<aside class="sidebar" id="sidebar"><div class="sidebar-inner" id="sidebarInner"></div></aside>
+<main class="main-content" id="mainContent">
+  <div class="stats-grid" id="statsGrid"></div>
+  <div class="overview-row" id="overviewRow"></div>
+  <div class="chart-row" id="chartRow"></div>
+  <div class="controls-bar" id="controlsBar"></div>
+  <div class="problems-container" id="problemsContainer"></div>
+</main>
+<div class="modal-overlay" id="resetModal">
+  <div class="modal">
+    <h3>⚠️ Reset Progress?</h3>
+    <p>This will clear all solved problems, timers, and streak data. This cannot be undone.</p>
+    <div class="modal-actions">
+      <button class="mb cancel" id="cancelReset">Cancel</button>
+      <button class="mb confirm" id="confirmReset">Reset Everything</button>
+    </div>
+  </div>
+</div>
+<div class="toast-container" id="toastContainer"></div>
+<script>
+const P=[
+{id:1,name:"Set Matrix Zeroes",link:"https://leetcode.com/problems/set-matrix-zeroes/",difficulty:"Medium",topic:"Arrays"},
+{id:2,name:"Pascal's Triangle",link:"https://leetcode.com/problems/pascals-triangle/",difficulty:"Easy",topic:"Arrays"},
+{id:3,name:"Next Permutation",link:"https://leetcode.com/problems/next-permutation/",difficulty:"Medium",topic:"Arrays"},
+{id:4,name:"Maximum Subarray",link:"https://leetcode.com/problems/maximum-subarray/",difficulty:"Medium",topic:"Arrays"},
+{id:5,name:"Sort Colors",link:"https://leetcode.com/problems/sort-colors/",difficulty:"Medium",topic:"Arrays"},
+{id:6,name:"Best Time to Buy and Sell Stock",link:"https://leetcode.com/problems/best-time-to-buy-and-sell-stock/",difficulty:"Easy",topic:"Arrays"},
+{id:7,name:"Rotate Image",link:"https://leetcode.com/problems/rotate-image/",difficulty:"Medium",topic:"Arrays II"},
+{id:8,name:"Merge Intervals",link:"https://leetcode.com/problems/merge-intervals/",difficulty:"Medium",topic:"Arrays II"},
+{id:9,name:"Merge Sorted Array",link:"https://leetcode.com/problems/merge-sorted-array/",difficulty:"Easy",topic:"Arrays II"},
+{id:10,name:"Find the Duplicate Number",link:"https://leetcode.com/problems/find-the-duplicate-number/",difficulty:"Medium",topic:"Arrays II"},
+{id:11,name:"Repeat and Missing Number",link:"https://practice.geeksforgeeks.org/problems/find-missing-and-repeating2512/1",difficulty:"Hard",topic:"Arrays II"},
+{id:12,name:"Count Inversions",link:"https://practice.geeksforgeeks.org/problems/inversion-of-array/0",difficulty:"Hard",topic:"Arrays II"},
+{id:13,name:"Search a 2D Matrix",link:"https://leetcode.com/problems/search-a-2d-matrix/",difficulty:"Medium",topic:"Arrays III"},
+{id:14,name:"Pow(x, n)",link:"https://leetcode.com/problems/powx-n/",difficulty:"Medium",topic:"Arrays III"},
+{id:15,name:"Majority Element",link:"https://leetcode.com/problems/majority-element/",difficulty:"Easy",topic:"Arrays III"},
+{id:16,name:"Majority Element II",link:"https://leetcode.com/problems/majority-element-ii/",difficulty:"Medium",topic:"Arrays III"},
+{id:17,name:"Unique Paths",link:"https://leetcode.com/problems/unique-paths/",difficulty:"Medium",topic:"Arrays III"},
+{id:18,name:"Reverse Pairs",link:"https://leetcode.com/problems/reverse-pairs/",difficulty:"Hard",topic:"Arrays III"},
+{id:19,name:"Two Sum",link:"https://leetcode.com/problems/two-sum/",difficulty:"Easy",topic:"Arrays IV"},
+{id:20,name:"4Sum",link:"https://leetcode.com/problems/4sum/",difficulty:"Medium",topic:"Arrays IV"},
+{id:21,name:"Longest Consecutive Sequence",link:"https://leetcode.com/problems/longest-consecutive-sequence/",difficulty:"Medium",topic:"Arrays IV"},
+{id:22,name:"Largest Subarray with 0 Sum",link:"https://practice.geeksforgeeks.org/problems/largest-subarray-with-0-sum/1",difficulty:"Medium",topic:"Arrays IV"},
+{id:23,name:"Subarray Sum Equals K",link:"https://leetcode.com/problems/subarray-sum-equals-k/",difficulty:"Medium",topic:"Arrays IV"},
+{id:24,name:"Longest Substring Without Repeating Characters",link:"https://leetcode.com/problems/longest-substring-without-repeating-characters/",difficulty:"Medium",topic:"Arrays IV"},
+{id:25,name:"Reverse Linked List",link:"https://leetcode.com/problems/reverse-linked-list/",difficulty:"Easy",topic:"Linked List"},
+{id:26,name:"Middle of Linked List",link:"https://leetcode.com/problems/middle-of-the-linked-list/",difficulty:"Easy",topic:"Linked List"},
+{id:27,name:"Merge Two Sorted Lists",link:"https://leetcode.com/problems/merge-two-sorted-lists/",difficulty:"Easy",topic:"Linked List"},
+{id:28,name:"Remove Nth Node From End",link:"https://leetcode.com/problems/remove-nth-node-from-end-of-list/",difficulty:"Medium",topic:"Linked List"},
+{id:29,name:"Linked List Cycle",link:"https://leetcode.com/problems/linked-list-cycle/",difficulty:"Easy",topic:"Linked List"},
+{id:30,name:"Palindrome Linked List",link:"https://leetcode.com/problems/palindrome-linked-list/",difficulty:"Easy",topic:"Linked List"},
+{id:31,name:"Intersection of Two Linked Lists",link:"https://leetcode.com/problems/intersection-of-two-linked-lists/",difficulty:"Easy",topic:"Linked List II"},
+{id:32,name:"Add Two Numbers",link:"https://leetcode.com/problems/add-two-numbers/",difficulty:"Medium",topic:"Linked List II"},
+{id:33,name:"Delete Node in Linked List",link:"https://leetcode.com/problems/delete-node-in-a-linked-list/",difficulty:"Medium",topic:"Linked List II"},
+{id:34,name:"Reverse Nodes in k-Group",link:"https://leetcode.com/problems/reverse-nodes-in-k-group/",difficulty:"Hard",topic:"Linked List II"},
+{id:35,name:"Flatten Linked List",link:"https://practice.geeksforgeeks.org/problems/flattening-a-linked-list/1",difficulty:"Medium",topic:"Linked List II"},
+{id:36,name:"Rotate List",link:"https://leetcode.com/problems/rotate-list/",difficulty:"Medium",topic:"Linked List II"},
+{id:37,name:"Clone Graph",link:"https://leetcode.com/problems/clone-graph/",difficulty:"Medium",topic:"Linked List & Arrays"},
+{id:38,name:"Copy List with Random Pointer",link:"https://leetcode.com/problems/copy-list-with-random-pointer/",difficulty:"Medium",topic:"Linked List & Arrays"},
+{id:39,name:"3Sum",link:"https://leetcode.com/problems/3sum/",difficulty:"Medium",topic:"Linked List & Arrays"},
+{id:40,name:"Trapping Rain Water",link:"https://leetcode.com/problems/trapping-rain-water/",difficulty:"Hard",topic:"Linked List & Arrays"},
+{id:41,name:"Remove Duplicates from Sorted Array",link:"https://leetcode.com/problems/remove-duplicates-from-sorted-array/",difficulty:"Easy",topic:"Linked List & Arrays"},
+{id:42,name:"Max Consecutive Ones",link:"https://leetcode.com/problems/max-consecutive-ones/",difficulty:"Easy",topic:"Linked List & Arrays"},
+{id:43,name:"N Meetings in One Room",link:"https://practice.geeksforgeeks.org/problems/n-meetings-in-one-room-1587115620/1",difficulty:"Easy",topic:"Greedy"},
+{id:44,name:"Minimum Platforms",link:"https://practice.geeksforgeeks.org/problems/minimum-platforms-1587115620/1",difficulty:"Medium",topic:"Greedy"},
+{id:45,name:"Job Sequencing Problem",link:"https://practice.geeksforgeeks.org/problems/job-sequencing-problem-1587115620/1",difficulty:"Medium",topic:"Greedy"},
+{id:46,name:"Fractional Knapsack",link:"https://practice.geeksforgeeks.org/problems/fractional-knapsack-1587115620/1",difficulty:"Medium",topic:"Greedy"},
+{id:47,name:"Assign Cookies",link:"https://leetcode.com/problems/assign-cookies/",difficulty:"Easy",topic:"Greedy"},
+{id:48,name:"Lemonade Change",link:"https://leetcode.com/problems/lemonade-change/",difficulty:"Easy",topic:"Greedy"},
+{id:49,name:"Jump Game",link:"https://leetcode.com/problems/jump-game/",difficulty:"Medium",topic:"Greedy"},
+{id:50,name:"Subsets",link:"https://leetcode.com/problems/subsets/",difficulty:"Medium",topic:"Recursion"},
+{id:51,name:"Subsets II",link:"https://leetcode.com/problems/subsets-ii/",difficulty:"Medium",topic:"Recursion"},
+{id:52,name:"Permutations",link:"https://leetcode.com/problems/permutations/",difficulty:"Medium",topic:"Recursion"},
+{id:53,name:"Permutations II",link:"https://leetcode.com/problems/permutations-ii/",difficulty:"Medium",topic:"Recursion"},
+{id:54,name:"Combination Sum",link:"https://leetcode.com/problems/combination-sum/",difficulty:"Medium",topic:"Recursion"},
+{id:55,name:"Combination Sum II",link:"https://leetcode.com/problems/combination-sum-ii/",difficulty:"Medium",topic:"Recursion"},
+{id:56,name:"Palindrome Partitioning",link:"https://leetcode.com/problems/palindrome-partitioning/",difficulty:"Medium",topic:"Backtracking"},
+{id:57,name:"N-Queens",link:"https://leetcode.com/problems/n-queens/",difficulty:"Hard",topic:"Backtracking"},
+{id:58,name:"Sudoku Solver",link:"https://leetcode.com/problems/sudoku-solver/",difficulty:"Hard",topic:"Backtracking"},
+{id:59,name:"Word Search",link:"https://leetcode.com/problems/word-search/",difficulty:"Medium",topic:"Backtracking"},
+{id:60,name:"Rat in a Maze",link:"https://practice.geeksforgeeks.org/problems/rat-in-a-maze-problem/1",difficulty:"Medium",topic:"Backtracking"},
+{id:61,name:"M Coloring Problem",link:"https://practice.geeksforgeeks.org/problems/m-coloring-problem-1587115620/1",difficulty:"Medium",topic:"Backtracking"},
+{id:62,name:"Binary Search",link:"https://leetcode.com/problems/binary-search/",difficulty:"Easy",topic:"Binary Search"},
+{id:63,name:"Search Insert Position",link:"https://leetcode.com/problems/search-insert-position/",difficulty:"Easy",topic:"Binary Search"},
+{id:64,name:"Search in Rotated Sorted Array",link:"https://leetcode.com/problems/search-in-rotated-sorted-array/",difficulty:"Medium",topic:"Binary Search"},
+{id:65,name:"Find Minimum in Rotated Sorted Array",link:"https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/",difficulty:"Medium",topic:"Binary Search"},
+{id:66,name:"Single Element in Sorted Array",link:"https://leetcode.com/problems/single-element-in-a-sorted-array/",difficulty:"Medium",topic:"Binary Search"},
+{id:67,name:"Median of Two Sorted Arrays",link:"https://leetcode.com/problems/median-of-two-sorted-arrays/",difficulty:"Hard",topic:"Binary Search"},
+{id:68,name:"Koko Eating Bananas",link:"https://leetcode.com/problems/koko-eating-bananas/",difficulty:"Medium",topic:"Binary Search"},
+{id:69,name:"Allocate Minimum Number of Pages",link:"https://practice.geeksforgeeks.org/problems/allocate-minimum-number-of-pages0937/1",difficulty:"Hard",topic:"Binary Search"},
+{id:70,name:"Kth Largest Element in an Array",link:"https://leetcode.com/problems/kth-largest-element-in-an-array/",difficulty:"Medium",topic:"Heaps"},
+{id:71,name:"Top K Frequent Elements",link:"https://leetcode.com/problems/top-k-frequent-elements/",difficulty:"Medium",topic:"Heaps"},
+{id:72,name:"Merge K Sorted Lists",link:"https://leetcode.com/problems/merge-k-sorted-lists/",difficulty:"Hard",topic:"Heaps"},
+{id:73,name:"Find Median from Data Stream",link:"https://leetcode.com/problems/find-median-from-data-stream/",difficulty:"Hard",topic:"Heaps"},
+{id:74,name:"K Closest Points to Origin",link:"https://leetcode.com/problems/k-closest-points-to-origin/",difficulty:"Medium",topic:"Heaps"},
+{id:75,name:"Sort Characters By Frequency",link:"https://leetcode.com/problems/sort-characters-by-frequency/",difficulty:"Medium",topic:"Heaps"},
+{id:76,name:"Valid Parentheses",link:"https://leetcode.com/problems/valid-parentheses/",difficulty:"Easy",topic:"Stack & Queue"},
+{id:77,name:"Min Stack",link:"https://leetcode.com/problems/min-stack/",difficulty:"Medium",topic:"Stack & Queue"},
+{id:78,name:"Next Greater Element I",link:"https://leetcode.com/problems/next-greater-element-i/",difficulty:"Easy",topic:"Stack & Queue"},
+{id:79,name:"Next Greater Element II",link:"https://leetcode.com/problems/next-greater-element-ii/",difficulty:"Medium",topic:"Stack & Queue"},
+{id:80,name:"Largest Rectangle in Histogram",link:"https://leetcode.com/problems/largest-rectangle-in-histogram/",difficulty:"Hard",topic:"Stack & Queue"},
+{id:81,name:"Sliding Window Maximum",link:"https://leetcode.com/problems/sliding-window-maximum/",difficulty:"Hard",topic:"Stack & Queue"},
+{id:82,name:"Implement Queue using Stacks",link:"https://leetcode.com/problems/implement-queue-using-stacks/",difficulty:"Easy",topic:"Stack & Queue"},
+{id:83,name:"LRU Cache",link:"https://leetcode.com/problems/lru-cache/",difficulty:"Medium",topic:"Stack & Queue II"},
+{id:84,name:"LFU Cache",link:"https://leetcode.com/problems/lfu-cache/",difficulty:"Hard",topic:"Stack & Queue II"},
+{id:85,name:"Rotten Oranges",link:"https://leetcode.com/problems/rotting-oranges/",difficulty:"Medium",topic:"Stack & Queue II"},
+{id:86,name:"First Negative in Window",link:"https://practice.geeksforgeeks.org/problems/first-negative-integer-in-every-window-of-size-k3345/1",difficulty:"Medium",topic:"Stack & Queue II"},
+{id:87,name:"Circular Queue",link:"https://leetcode.com/problems/design-circular-queue/",difficulty:"Medium",topic:"Stack & Queue II"},
+{id:88,name:"Sliding Window Median",link:"https://leetcode.com/problems/sliding-window-median/",difficulty:"Hard",topic:"Stack & Queue II"},
+{id:89,name:"Celebrity Problem",link:"https://practice.geeksforgeeks.org/problems/the-celebrity-problem/1",difficulty:"Medium",topic:"Stack & Queue II"},
+{id:90,name:"Online Stock Span",link:"https://leetcode.com/problems/online-stock-span/",difficulty:"Medium",topic:"Stack & Queue II"},
+{id:91,name:"Sum of Subarray Minimums",link:"https://leetcode.com/problems/sum-of-subarray-minimums/",difficulty:"Medium",topic:"Stack & Queue II"},
+{id:92,name:"Asteroid Collision",link:"https://leetcode.com/problems/asteroid-collision/",difficulty:"Medium",topic:"Stack & Queue II"},
+{id:93,name:"Reverse Words in a String",link:"https://leetcode.com/problems/reverse-words-in-a-string/",difficulty:"Medium",topic:"Strings"},
+{id:94,name:"Longest Palindromic Substring",link:"https://leetcode.com/problems/longest-palindromic-substring/",difficulty:"Medium",topic:"Strings"},
+{id:95,name:"Roman to Integer",link:"https://leetcode.com/problems/roman-to-integer/",difficulty:"Easy",topic:"Strings"},
+{id:96,name:"Integer to Roman",link:"https://leetcode.com/problems/integer-to-roman/",difficulty:"Medium",topic:"Strings"},
+{id:97,name:"Implement strStr()",link:"https://leetcode.com/problems/find-the-index-of-the-first-occurrence-in-a-string/",difficulty:"Easy",topic:"Strings"},
+{id:98,name:"Longest Common Prefix",link:"https://leetcode.com/problems/longest-common-prefix/",difficulty:"Easy",topic:"Strings"},
+{id:99,name:"Count and Say",link:"https://leetcode.com/problems/count-and-say/",difficulty:"Medium",topic:"Strings II"},
+{id:100,name:"Compare Version Numbers",link:"https://leetcode.com/problems/compare-version-numbers/",difficulty:"Medium",topic:"Strings II"},
+{id:101,name:"Valid Anagram",link:"https://leetcode.com/problems/valid-anagram/",difficulty:"Easy",topic:"Strings II"},
+{id:102,name:"Minimum Insertions to Make Palindrome",link:"https://leetcode.com/problems/minimum-insertion-steps-to-make-a-string-palindrome/",difficulty:"Hard",topic:"Strings II"},
+{id:103,name:"Longest Palindrome by Concatenating",link:"https://leetcode.com/problems/longest-palindrome/",difficulty:"Medium",topic:"Strings II"},
+{id:104,name:"Group Anagrams",link:"https://leetcode.com/problems/group-anagrams/",difficulty:"Medium",topic:"Strings II"},
+{id:105,name:"Inorder Traversal",link:"https://leetcode.com/problems/binary-tree-inorder-traversal/",difficulty:"Easy",topic:"Binary Tree"},
+{id:106,name:"Preorder Traversal",link:"https://leetcode.com/problems/binary-tree-preorder-traversal/",difficulty:"Easy",topic:"Binary Tree"},
+{id:107,name:"Postorder Traversal",link:"https://leetcode.com/problems/binary-tree-postorder-traversal/",difficulty:"Easy",topic:"Binary Tree"},
+{id:108,name:"Level Order Traversal",link:"https://leetcode.com/problems/binary-tree-level-order-traversal/",difficulty:"Medium",topic:"Binary Tree"},
+{id:109,name:"Maximum Depth of Binary Tree",link:"https://leetcode.com/problems/maximum-depth-of-binary-tree/",difficulty:"Easy",topic:"Binary Tree"},
+{id:110,name:"Diameter of Binary Tree",link:"https://leetcode.com/problems/diameter-of-binary-tree/",difficulty:"Easy",topic:"Binary Tree"},
+{id:111,name:"Balanced Binary Tree",link:"https://leetcode.com/problems/balanced-binary-tree/",difficulty:"Easy",topic:"Binary Tree"},
+{id:112,name:"Same Tree",link:"https://leetcode.com/problems/same-tree/",difficulty:"Easy",topic:"Binary Tree"},
+{id:113,name:"Zigzag Level Order Traversal",link:"https://leetcode.com/problems/binary-tree-zigzag-level-order-traversal/",difficulty:"Medium",topic:"Binary Tree"},
+{id:114,name:"Boundary Traversal",link:"https://practice.geeksforgeeks.org/problems/boundary-traversal-of-binary-tree/1",difficulty:"Medium",topic:"Binary Tree"},
+{id:115,name:"Vertical Order Traversal",link:"https://leetcode.com/problems/vertical-order-traversal-of-a-binary-tree/",difficulty:"Hard",topic:"Binary Tree"},
+{id:116,name:"Top View of Binary Tree",link:"https://practice.geeksforgeeks.org/problems/top-view-of-binary-tree/1",difficulty:"Medium",topic:"Binary Tree"},
+{id:117,name:"Bottom View of Binary Tree",link:"https://practice.geeksforgeeks.org/problems/bottom-view-of-binary-tree/1",difficulty:"Medium",topic:"Binary Tree II"},
+{id:118,name:"Right View of Binary Tree",link:"https://leetcode.com/problems/binary-tree-right-side-view/",difficulty:"Medium",topic:"Binary Tree II"},
+{id:119,name:"Left View of Binary Tree",link:"https://practice.geeksforgeeks.org/problems/left-view-of-binary-tree/1",difficulty:"Easy",topic:"Binary Tree II"},
+{id:120,name:"Symmetric Tree",link:"https://leetcode.com/problems/symmetric-tree/",difficulty:"Easy",topic:"Binary Tree II"},
+{id:121,name:"Path Sum",link:"https://leetcode.com/problems/path-sum/",difficulty:"Easy",topic:"Binary Tree II"},
+{id:122,name:"Maximum Path Sum",link:"https://leetcode.com/problems/binary-tree-maximum-path-sum/",difficulty:"Hard",topic:"Binary Tree II"},
+{id:123,name:"Lowest Common Ancestor",link:"https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree/",difficulty:"Medium",topic:"Binary Tree II"},
+{id:124,name:"Construct Tree from Traversals",link:"https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/",difficulty:"Medium",topic:"Binary Tree II"},
+{id:125,name:"Flatten Binary Tree to Linked List",link:"https://leetcode.com/problems/flatten-binary-tree-to-linked-list/",difficulty:"Medium",topic:"Binary Tree III"},
+{id:126,name:"Serialize and Deserialize Binary Tree",link:"https://leetcode.com/problems/serialize-and-deserialize-binary-tree/",difficulty:"Hard",topic:"Binary Tree III"},
+{id:127,name:"Morris Traversal",link:"https://practice.geeksforgeeks.org/problems/inorder-traversal/1",difficulty:"Medium",topic:"Binary Tree III"},
+{id:128,name:"Kth Smallest in BST",link:"https://leetcode.com/problems/kth-smallest-element-in-a-bst/",difficulty:"Medium",topic:"Binary Tree III"},
+{id:129,name:"Validate BST",link:"https://leetcode.com/problems/validate-binary-search-tree/",difficulty:"Medium",topic:"Binary Tree III"},
+{id:130,name:"LCA in BST",link:"https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/",difficulty:"Medium",topic:"Binary Tree III"},
+{id:131,name:"Two Sum BST",link:"https://leetcode.com/problems/two-sum-iv-input-is-a-bst/",difficulty:"Easy",topic:"Binary Tree III"},
+{id:132,name:"Search in BST",link:"https://leetcode.com/problems/search-in-a-binary-search-tree/",difficulty:"Easy",topic:"BST"},
+{id:133,name:"Insert into BST",link:"https://leetcode.com/problems/insert-into-a-binary-search-tree/",difficulty:"Medium",topic:"BST"},
+{id:134,name:"Delete Node in BST",link:"https://leetcode.com/problems/delete-node-in-a-bst/",difficulty:"Medium",topic:"BST"},
+{id:135,name:"Floor in BST",link:"https://practice.geeksforgeeks.org/problems/floor-in-bst/1",difficulty:"Medium",topic:"BST"},
+{id:136,name:"Ceil in BST",link:"https://practice.geeksforgeeks.org/problems/ceil-in-bst/1",difficulty:"Medium",topic:"BST"},
+{id:137,name:"Inorder Successor",link:"https://leetcode.com/problems/inorder-successor-in-bst/",difficulty:"Medium",topic:"BST"},
+{id:138,name:"BST Iterator",link:"https://leetcode.com/problems/binary-search-tree-iterator/",difficulty:"Medium",topic:"BST"},
+{id:139,name:"Largest BST in Binary Tree",link:"https://practice.geeksforgeeks.org/problems/largest-bst/1",difficulty:"Hard",topic:"BST II"},
+{id:140,name:"Recover BST",link:"https://leetcode.com/problems/recover-binary-search-tree/",difficulty:"Medium",topic:"BST II"},
+{id:141,name:"Kth Largest in BST",link:"https://leetcode.com/problems/kth-largest-element-in-a-bst/",difficulty:"Easy",topic:"BST II"},
+{id:142,name:"Construct BST from Preorder",link:"https://leetcode.com/problems/construct-binary-search-tree-from-preorder-traversal/",difficulty:"Medium",topic:"BST II"},
+{id:143,name:"Merge Two BSTs",link:"https://practice.geeksforgeeks.org/problems/merge-two-bst-s/1",difficulty:"Hard",topic:"BST II"},
+{id:144,name:"Convert Sorted Array to BST",link:"https://leetcode.com/problems/convert-sorted-array-to-binary-search-tree/",difficulty:"Easy",topic:"BST II"},
+{id:145,name:"Convert BST to Greater Tree",link:"https://leetcode.com/problems/convert-bst-to-greater-tree/",difficulty:"Medium",topic:"BST II"},
+{id:146,name:"BFS Traversal",link:"https://practice.geeksforgeeks.org/problems/bfs-traversal-of-graph/1",difficulty:"Easy",topic:"Graph"},
+{id:147,name:"DFS Traversal",link:"https://practice.geeksforgeeks.org/problems/depth-first-traversal-for-a-graph/1",difficulty:"Easy",topic:"Graph"},
+{id:148,name:"Number of Islands",link:"https://leetcode.com/problems/number-of-islands/",difficulty:"Medium",topic:"Graph"},
+{id:149,name:"Flood Fill",link:"https://leetcode.com/problems/flood-fill/",difficulty:"Easy",topic:"Graph"},
+{id:150,name:"Detect Cycle in Undirected Graph",link:"https://practice.geeksforgeeks.org/problems/detect-cycle-in-an-undirected-graph/1",difficulty:"Medium",topic:"Graph"},
+{id:151,name:"Detect Cycle in Directed Graph",link:"https://practice.geeksforgeeks.org/problems/detect-cycle-in-a-directed-graph/1",difficulty:"Medium",topic:"Graph"},
+{id:152,name:"Topological Sort",link:"https://practice.geeksforgeeks.org/problems/topological-sort/1",difficulty:"Medium",topic:"Graph"},
+{id:153,name:"Course Schedule",link:"https://leetcode.com/problems/course-schedule/",difficulty:"Medium",topic:"Graph"},
+{id:154,name:"Bipartite Graph",link:"https://leetcode.com/problems/is-graph-bipartite/",difficulty:"Medium",topic:"Graph"},
+{id:155,name:"Dijkstra Algorithm",link:"https://practice.geeksforgeeks.org/problems/implementing-dijkstra-set-1-adjacency-matrix/1",difficulty:"Medium",topic:"Graph"},
+{id:156,name:"Shortest Path in DAG",link:"https://practice.geeksforgeeks.org/problems/shortest-path-in-undirected-graph/1",difficulty:"Medium",topic:"Graph"},
+{id:157,name:"Bellman Ford",link:"https://practice.geeksforgeeks.org/problems/distance-from-the-source-bellman-ford-algorithm/1",difficulty:"Medium",topic:"Graph"},
+{id:158,name:"Floyd Warshall",link:"https://practice.geeksforgeeks.org/problems/implementing-floyd-warshall2042/1",difficulty:"Medium",topic:"Graph II"},
+{id:159,name:"Prim's Algorithm",link:"https://practice.geeksforgeeks.org/problems/minimum-spanning-tree/1",difficulty:"Medium",topic:"Graph II"},
+{id:160,name:"Kruskal's Algorithm",link:"https://practice.geeksforgeeks.org/problems/minimum-spanning-tree/1",difficulty:"Medium",topic:"Graph II"},
+{id:161,name:"Bridges in Graph",link:"https://practice.geeksforgeeks.org/problems/bridge-edge-in-graph/1",difficulty:"Hard",topic:"Graph II"},
+{id:162,name:"Articulation Point",link:"https://practice.geeksforgeeks.org/problems/articulation-point-1/1",difficulty:"Hard",topic:"Graph II"},
+{id:163,name:"Kosaraju Algorithm",link:"https://practice.geeksforgeeks.org/problems/strongly-connected-components-kosarajus-algo/1",difficulty:"Hard",topic:"Graph II"},
+{id:164,name:"Alien Dictionary",link:"https://practice.geeksforgeeks.org/problems/alien-dictionary/1",difficulty:"Hard",topic:"Graph II"},
+{id:165,name:"Climbing Stairs",link:"https://leetcode.com/problems/climbing-stairs/",difficulty:"Easy",topic:"Dynamic Programming"},
+{id:166,name:"Frog Jump",link:"https://practice.geeksforgeeks.org/problems/frog-jump/1",difficulty:"Medium",topic:"Dynamic Programming"},
+{id:167,name:"House Robber",link:"https://leetcode.com/problems/house-robber/",difficulty:"Medium",topic:"Dynamic Programming"},
+{id:168,name:"House Robber II",link:"https://leetcode.com/problems/house-robber-ii/",difficulty:"Medium",topic:"Dynamic Programming"},
+{id:169,name:"Coin Change",link:"https://leetcode.com/problems/coin-change/",difficulty:"Medium",topic:"Dynamic Programming"},
+{id:170,name:"Longest Increasing Subsequence",link:"https://leetcode.com/problems/longest-increasing-subsequence/",difficulty:"Medium",topic:"Dynamic Programming"},
+{id:171,name:"0/1 Knapsack",link:"https://practice.geeksforgeeks.org/problems/0-1-knapsack-problem0945/1",difficulty:"Medium",topic:"Dynamic Programming"},
+{id:172,name:"Word Break",link:"https://leetcode.com/problems/word-break/",difficulty:"Medium",topic:"Dynamic Programming"},
+{id:173,name:"Longest Common Subsequence",link:"https://leetcode.com/problems/longest-common-subsequence/",difficulty:"Medium",topic:"DP II"},
+{id:174,name:"Longest Palindromic Subsequence",link:"https://leetcode.com/problems/longest-palindromic-subsequence/",difficulty:"Medium",topic:"DP II"},
+{id:175,name:"Edit Distance",link:"https://leetcode.com/problems/edit-distance/",difficulty:"Hard",topic:"DP II"},
+{id:176,name:"Matrix Chain Multiplication",link:"https://practice.geeksforgeeks.org/problems/matrix-chain-multiplication0303/1",difficulty:"Hard",topic:"DP II"},
+{id:177,name:"Partition Equal Subset Sum",link:"https://leetcode.com/problems/partition-equal-subset-sum/",difficulty:"Medium",topic:"DP II"},
+{id:178,name:"Minimum Path Sum",link:"https://leetcode.com/problems/minimum-path-sum/",difficulty:"Medium",topic:"DP II"},
+{id:179,name:"Unique Paths II",link:"https://leetcode.com/problems/unique-paths-ii/",difficulty:"Medium",topic:"DP II"},
+{id:180,name:"Burst Balloons",link:"https://leetcode.com/problems/burst-balloons/",difficulty:"Hard",topic:"DP II"},
+{id:181,name:"Regular Expression Matching",link:"https://leetcode.com/problems/regular-expression-matching/",difficulty:"Hard",topic:"DP II"},
+{id:182,name:"Implement Trie",link:"https://leetcode.com/problems/implement-trie-prefix-tree/",difficulty:"Medium",topic:"Trie"},
+{id:183,name:"Add and Search Word",link:"https://leetcode.com/problems/design-add-and-search-words-data-structure/",difficulty:"Medium",topic:"Trie"},
+{id:184,name:"Word Search II",link:"https://leetcode.com/problems/word-search-ii/",difficulty:"Hard",topic:"Trie"},
+{id:185,name:"Maximum XOR of Two Numbers",link:"https://leetcode.com/problems/maximum-xor-of-two-numbers-in-an-array/",difficulty:"Medium",topic:"Trie"},
+{id:186,name:"Longest Word in Dictionary",link:"https://leetcode.com/problems/longest-word-in-dictionary/",difficulty:"Medium",topic:"Trie"},
+{id:187,name:"Replace Words",link:"https://leetcode.com/problems/replace-words/",difficulty:"Medium",topic:"Trie"},
+{id:188,name:"Count Distinct Substrings",link:"https://practice.geeksforgeeks.org/problems/count-of-distinct-substrings/1",difficulty:"Hard",topic:"Trie"},
+{id:189,name:"Maximum Product Subarray",link:"https://leetcode.com/problems/maximum-product-subarray/",difficulty:"Medium",topic:"Arrays"},
+{id:190,name:"Container With Most Water",link:"https://leetcode.com/problems/container-with-most-water/",difficulty:"Medium",topic:"Arrays"},
+{id:191,name:"Maximum Subarray Sum Circular",link:"https://leetcode.com/problems/maximum-sum-circular-subarray/",difficulty:"Medium",topic:"Arrays"}
+];
+
+const ICONS={"Arrays":"📦","Arrays II":"📦","Arrays III":"📦","Arrays IV":"📦","Linked List":"🔗","Linked List II":"🔗","Linked List & Arrays":"🔗","Greedy":"💡","Recursion":"🔄","Backtracking":"🔁","Binary Search":"🔍","Heaps":"⛰️","Stack & Queue":"📚","Stack & Queue II":"📚","Strings":"🔤","Strings II":"🔤","Binary Tree":"🌲","Binary Tree II":"🌲","Binary Tree III":"🌲","BST":"🌳","BST II":"🌳","Graph":"🕸️","Graph II":"🕸️","Dynamic Programming":"💎","DP II":"💎","Trie":"📖"};
+
+let S={solved:{},times:{},timers:{},streak:{current:0,longest:0,lastDate:null,freezes:0},solvedDates:{},theme:"dark",accent:"#00d4aa",filter:{topic:"All",diff:"All",status:"all",search:"",sort:"default",page:1}};
+const PS=30;
+function load(){try{const s=localStorage.getItem("dsa_v4");if(s){const p=JSON.parse(s);Object.assign(S,p);S.timers={}}}catch(e){}}
+function save(){const t={solved:S.solved,times:S.times,streak:S.streak,solvedDates:S.solvedDates,theme:S.theme,accent:S.accent};localStorage.setItem("dsa_v4",JSON.stringify(t))}
+load();
+function solvedCount(){return Object.values(S.solved).filter(Boolean).length}
+function diffCount(d){return P.filter(p=>p.difficulty===d&&S.solved[p.id]).length}
+function topicStats(t){const ps=P.filter(p=>p.topic===t);return{total:ps.length,solved:ps.filter(p=>S.solved[p.id]).length}}
+function allTopics(){return[...new Set(P.map(p=>p.topic))]}
+function totalTime(){return Object.values(S.times).reduce((a,b)=>a+(b||0),0)}
+function fmtTime(s){if(!s)return"—";const h=Math.floor(s/3600),m=Math.floor((s%3600)/60),sec=s%60;if(h>0)return`${h}h ${m}m`;if(m>0)return`${m}m ${sec}s`;return`${sec}s`}
+function getFiltered(){let l=[...P];const f=S.filter;if(f.topic&&f.topic!=="All")l=l.filter(p=>p.topic===f.topic);if(f.diff&&f.diff!=="All")l=l.filter(p=>p.difficulty===f.diff);if(f.status==="completed")l=l.filter(p=>S.solved[p.id]);if(f.status==="incomplete")l=l.filter(p=>!S.solved[p.id]);if(f.search){const q=f.search.toLowerCase();l=l.filter(p=>p.name.toLowerCase().includes(q)||p.topic.toLowerCase().includes(q))}const ord={Easy:0,Medium:1,Hard:2};if(f.sort==="difficulty")l.sort((a,b)=>ord[a.difficulty]-ord[b.difficulty]);else if(f.sort==="topic")l.sort((a,b)=>a.topic.localeCompare(b.topic));else if(f.sort==="completion")l.sort((a,b)=>(S.solved[b.id]?1:0)-(S.solved[a.id]?1:0));return l}
+
+function renderAll(){rStats();rOverview();rCharts();rSidebar();rControls();rProblems();rStreak();applyTheme()}
+function rStreak(){document.getElementById("streakDisplay").textContent=S.streak.current}
+
+function rStats(){const tot=P.length,sol=solvedCount(),e=diffCount("Easy"),m=diffCount("Medium"),h=diffCount("Hard"),eT=P.filter(p=>p.difficulty==="Easy").length,mT=P.filter(p=>p.difficulty==="Medium").length,hT=P.filter(p=>p.difficulty==="Hard").length,pct=tot?Math.round(sol/tot*100):0;
+document.getElementById("statsGrid").innerHTML=`
+<div class="stat-card total" style="animation-delay:0s"><div class="stat-label">Total Progress</div><div class="stat-row"><div class="stat-num">${sol}</div><div class="stat-den">/ ${tot}</div></div><div class="stat-prog"><div class="stat-prog-bar" style="width:${sol/tot*100}%"></div></div><div style="font-size:10px;color:var(--text3);margin-top:5px;font-family:var(--font-mono)">${pct}% complete</div></div>
+<div class="stat-card ec" style="animation-delay:0.05s"><div class="stat-label">Easy</div><div class="stat-row"><div class="stat-num" style="color:var(--easy)">${e}</div><div class="stat-den">/ ${eT}</div></div><div class="stat-prog"><div class="stat-prog-bar" style="width:${e/eT*100}%"></div></div><div style="font-size:10px;color:var(--text3);margin-top:5px;font-family:var(--font-mono)">${eT?Math.round(e/eT*100):0}%</div></div>
+<div class="stat-card mc" style="animation-delay:0.1s"><div class="stat-label">Medium</div><div class="stat-row"><div class="stat-num" style="color:var(--medium)">${m}</div><div class="stat-den">/ ${mT}</div></div><div class="stat-prog"><div class="stat-prog-bar" style="width:${m/mT*100}%"></div></div><div style="font-size:10px;color:var(--text3);margin-top:5px;font-family:var(--font-mono)">${mT?Math.round(m/mT*100):0}%</div></div>
+<div class="stat-card hc" style="animation-delay:0.15s"><div class="stat-label">Hard</div><div class="stat-row"><div class="stat-num" style="color:var(--hard)">${h}</div><div class="stat-den">/ ${hT}</div></div><div class="stat-prog"><div class="stat-prog-bar" style="width:${h/hT*100}%"></div></div><div style="font-size:10px;color:var(--text3);margin-top:5px;font-family:var(--font-mono)">${hT?Math.round(h/hT*100):0}%</div></div>`}
+
+function rOverview(){const tot=P.length,sol=solvedCount(),pct=tot?Math.round(sol/tot*100):0,circ=408,off=circ-(pct/100*circ),tt=totalTime(),avg=sol>0?Math.round(tt/sol):0;
+const today=new Date();let hc="";for(let i=69;i>=0;i--){const d=new Date(today);d.setDate(d.getDate()-i);const k=d.toISOString().split("T")[0],cnt=S.solvedDates[k]||0,cl=cnt===0?"":cnt<=1?"h1":cnt<=2?"h2":cnt<=3?"h3":"h4";hc+=`<div class="hcell ${cl}" title="${k}: ${cnt} solved"></div>`}
+document.getElementById("overviewRow").innerHTML=`
+<div class="circle-card"><h3>Overall Completion</h3>
+<div class="circular-progress"><svg width="150" height="150" viewBox="0 0 150 150"><circle class="cp-bg" cx="75" cy="75" r="65"/><circle class="cp-fill" cx="75" cy="75" r="65" id="cpFill"/></svg><div class="cp-text"><div class="cp-pct">${pct}%</div><div class="cp-sub">${sol}/${tot}</div></div></div>
+<div class="diff-legend">
+<div class="dli"><div class="ddot" style="background:var(--easy)"></div><div class="dll">Easy</div><div class="dlv" style="color:var(--easy)">${diffCount("Easy")}/${P.filter(p=>p.difficulty==="Easy").length}</div></div>
+<div class="dli"><div class="ddot" style="background:var(--medium)"></div><div class="dll">Medium</div><div class="dlv" style="color:var(--medium)">${diffCount("Medium")}/${P.filter(p=>p.difficulty==="Medium").length}</div></div>
+<div class="dli"><div class="ddot" style="background:var(--hard)"></div><div class="dll">Hard</div><div class="dlv" style="color:var(--hard)">${diffCount("Hard")}/${P.filter(p=>p.difficulty==="Hard").length}</div></div>
+</div></div>
+<div class="analytics-card"><h3>⚡ Analytics & Streak</h3>
+<div class="am">
+<div class="mbox"><div class="mval" style="color:#f5a623">🔥 ${S.streak.current}</div><div class="mlabel">Current Streak</div></div>
+<div class="mbox"><div class="mval" style="color:#7c6cfa">🏆 ${S.streak.longest}</div><div class="mlabel">Longest Streak</div></div>
+<div class="mbox"><div class="mval">🧊 ${S.streak.freezes}</div><div class="mlabel">Freeze Days</div></div>
+<div class="mbox"><div class="mval">${fmtTime(tt)}</div><div class="mlabel">Total Time</div></div>
+<div class="mbox"><div class="mval">${fmtTime(avg)}</div><div class="mlabel">Avg/Problem</div></div>
+<div class="mbox"><div class="mval" style="color:var(--medium)">${S.solvedDates[new Date().toISOString().split("T")[0]]||0}</div><div class="mlabel">Today</div></div>
+</div>
+<div><div style="font-size:10px;color:var(--text3);margin-bottom:5px;font-family:var(--font-mono)">ACTIVITY · LAST 70 DAYS</div><div class="hrow">${hc}</div></div>
+<div style="display:flex;gap:8px;align-items:center"><button onclick="addFreeze()" style="padding:4px 10px;border-radius:6px;border:1px solid var(--border);background:var(--bg4);color:var(--text3);cursor:pointer;font-size:11px;font-family:var(--font-main)">+ Freeze Day</button><span style="font-size:11px;color:var(--text3)">Skip a day without breaking streak</span></div>
+</div>`;
+setTimeout(()=>{const f=document.getElementById("cpFill");if(f)f.style.strokeDashoffset=off},100)}
+
+function rCharts(){const topics=allTopics();let bars="";topics.forEach(t=>{const s=topicStats(t),pct=s.total?Math.round(s.solved/s.total*100):0;bars+=`<div class="cbr"><div class="cbl">${t}</div><div class="cbt"><div class="cbf" style="width:${pct}%"></div></div><div class="cbv">${s.solved}/${s.total}</div></div>`});
+const eS=diffCount("Easy"),mS=diffCount("Medium"),hS=diffCount("Hard"),eT=P.filter(p=>p.difficulty==="Easy").length,mT=P.filter(p=>p.difficulty==="Medium").length,hT=P.filter(p=>p.difficulty==="Hard").length,MH=100;
+const eH=eT?Math.round(eS/eT*MH):0,mH=mT?Math.round(mS/mT*MH):0,hH=hT?Math.round(hS/hT*MH):0;
+const remE=P.filter(p=>p.difficulty==="Easy"&&!S.solved[p.id]).length,remM=P.filter(p=>p.difficulty==="Medium"&&!S.solved[p.id]).length,remH=P.filter(p=>p.difficulty==="Hard"&&!S.solved[p.id]).length;
+const estMin=remE*10+remM*25+remH*50,estH=Math.floor(estMin/60),estM=estMin%60;
+document.getElementById("chartRow").innerHTML=`
+<div class="chart-card" style="animation-delay:0.1s;max-height:300px;overflow-y:auto"><h3>📊 Topic-wise Progress</h3><div class="cbars">${bars}</div></div>
+<div class="chart-card" style="animation-delay:0.15s"><h3>🎯 Difficulty Breakdown</h3>
+<div class="diff-chart">
+<div class="dbc"><div class="dbcount" style="color:var(--easy)">${eS}</div><div class="dbcont"><div class="dbf" style="height:${eH}px;background:var(--easy)"></div></div><div class="dbn">Easy</div></div>
+<div class="dbc"><div class="dbcount" style="color:var(--medium)">${mS}</div><div class="dbcont"><div class="dbf" style="height:${mH}px;background:var(--medium)"></div></div><div class="dbn">Medium</div></div>
+<div class="dbc"><div class="dbcount" style="color:var(--hard)">${hS}</div><div class="dbcont"><div class="dbf" style="height:${hH}px;background:var(--hard)"></div></div><div class="dbn">Hard</div></div>
+</div>
+<div style="margin-top:14px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px;display:flex;justify-content:space-between;align-items:center">
+<div style="font-size:12px;color:var(--text2)">~${estH}h ${estM}m remaining</div>
+<div style="font-size:10px;color:var(--text3);font-family:var(--font-mono)">${remE}E · ${remM}M · ${remH}H left</div>
+</div></div>`}
+
+function rSidebar(){const topics=allTopics(),st=S.filter.topic;let h=`<div class="sl">Navigation</div>
+<div class="si-item ${st==="All"?"active":""}" onclick="fTopic('All')"><span class="si-icon">🏠</span><span class="si-name">All Problems</span><span class="si-badge">${solvedCount()}/${P.length}</span></div>
+<div class="si-item" onclick="fStatus('incomplete')"><span class="si-icon">⏳</span><span class="si-name">Unsolved</span><span class="si-badge">${P.length-solvedCount()}</span></div>
+<div class="si-item" onclick="fStatus('completed')"><span class="si-icon">✅</span><span class="si-name">Solved</span><span class="si-badge">${solvedCount()}</span></div>
+<div class="sl" style="margin-top:8px">Topics</div>`;
+topics.forEach(t=>{const s=topicStats(t),ic=ICONS[t]||"📁",act=st===t?"active":"";h+=`<div class="si-item ${act}" onclick="fTopic('${t}')"><span class="si-icon">${ic}</span><span class="si-name">${t}</span><span class="si-badge">${s.solved}/${s.total}</span></div>`});
+document.getElementById("sidebarInner").innerHTML=h}
+
+function rControls(){const f=S.filter;document.getElementById("controlsBar").innerHTML=`
+<h2>Problems</h2>
+<div class="fbg"><button class="fb ${f.status==="all"?"active":""}" onclick="fStatus('all')">All</button><button class="fb ${f.status==="completed"?"active":""}" onclick="fStatus('completed')">✓ Solved</button><button class="fb ${f.status==="incomplete"?"active":""}" onclick="fStatus('incomplete')">○ Unsolved</button></div>
+<div class="dc"><button class="dchip easy ${f.diff==="Easy"?"active":""}" onclick="fDiff('Easy')">Easy</button><button class="dchip medium ${f.diff==="Medium"?"active":""}" onclick="fDiff('Medium')">Med</button><button class="dchip hard ${f.diff==="Hard"?"active":""}" onclick="fDiff('Hard')">Hard</button></div>
+<select class="sort-sel" onchange="sortBy(this.value)"><option value="default" ${f.sort==="default"?"selected":""}>Default</option><option value="difficulty" ${f.sort==="difficulty"?"selected":""}>By Difficulty</option><option value="topic" ${f.sort==="topic"?"selected":""}>By Topic</option><option value="completion" ${f.sort==="completion"?"selected":""}>By Completion</option></select>
+<div class="ctrl-spacer"></div>
+<button class="ab success" onclick="markAll()">✓ Mark All</button>
+<button class="ab" onclick="exportJ()">⬆ Export</button>
+<label class="ab" style="cursor:pointer">⬇ Import<input type="file" accept=".json" onchange="importJ(event)" style="display:none"></label>
+<button class="ab danger" onclick="showReset()">↺ Reset</button>`}
+
+function rProblems(){const filtered=getFiltered(),p=S.filter.page,tot=Math.ceil(filtered.length/PS),start=(p-1)*PS,paged=filtered.slice(start,start+PS);
+let rows="";paged.forEach(pr=>{const solved=S.solved[pr.id],tv=S.times[pr.id]||0,running=S.timers[pr.id]&&S.timers[pr.id].interval;
+rows+=`<tr class="pr ${solved?"solved":""}" id="row-${pr.id}"><td style="width:42px"><input type="checkbox" class="pchk" ${solved?"checked":""} onchange="toggleSolve(${pr.id})"></td><td style="width:30px;color:var(--text3);font-family:var(--font-mono);font-size:10px">${pr.id}</td><td><a href="${pr.link}" target="_blank" class="pnl">${pr.name}<span class="ei">↗</span></a></td><td><span class="db ${pr.difficulty.toLowerCase()}">${pr.difficulty}</span></td><td><span class="ttag" onclick="fTopic('${pr.topic}')">${ICONS[pr.topic]||""} ${pr.topic}</span></td><td><div class="tcell"><button class="tsb ${running?"running":""}" onclick="toggleTimer(${pr.id})">${running?"⏹":"▶"}</button><span id="time-${pr.id}">${fmtTime(tv)}</span></div></td></tr>`});
+if(!rows)rows=`<tr><td colspan="6"><div class="empty-state"><div class="ei2">🔍</div><p>No problems match filters.</p></div></td></tr>`;
+let pbs=`<button class="pbtn" onclick="goPage(${p-1})" ${p<=1?"disabled":""}>‹</button>`;
+const ms=Math.min(tot,7);let s2=Math.max(1,p-3),e2=Math.min(tot,s2+ms-1);if(e2-s2<ms-1)s2=Math.max(1,e2-ms+1);
+if(s2>1)pbs+=`<button class="pbtn" onclick="goPage(1)">1</button><span style="color:var(--text3);padding:0 3px">…</span>`;
+for(let pg=s2;pg<=e2;pg++)pbs+=`<button class="pbtn ${pg===p?"active":""}" onclick="goPage(${pg})">${pg}</button>`;
+if(e2<tot)pbs+=`<span style="color:var(--text3);padding:0 3px">…</span><button class="pbtn" onclick="goPage(${tot})">${tot}</button>`;
+pbs+=`<button class="pbtn" onclick="goPage(${p+1})" ${p>=tot?"disabled":""}>›</button>`;
+document.getElementById("problemsContainer").innerHTML=`<table class="pt"><thead><tr><th></th><th>#</th><th>Problem</th><th>Difficulty</th><th>Topic</th><th>Time</th></tr></thead><tbody>${rows}</tbody></table><div class="pagination"><div class="page-info">Showing ${start+1}–${Math.min(p*PS,filtered.length)} of ${filtered.length}</div><div class="page-btns">${pbs}</div></div>`}
+
+function toggleSolve(id){S.solved[id]=!S.solved[id];if(!S.solved[id])delete S.solved[id];
+const today=new Date().toISOString().split("T")[0];if(!S.solvedDates[today])S.solvedDates[today]=0;
+if(S.solved[id]){S.solvedDates[today]++;if(S.streak.lastDate!==today){const last=S.streak.lastDate,diff=last?Math.floor((new Date(today)-new Date(last))/86400000):1;if(diff===1){S.streak.current++;if(S.streak.current>S.streak.longest)S.streak.longest=S.streak.current}else if(diff>1){if(S.streak.freezes>0&&diff===2)S.streak.freezes--;else S.streak.current=1}else{S.streak.current=Math.max(1,S.streak.current)}S.streak.lastDate=today}}else{S.solvedDates[today]=Math.max(0,(S.solvedDates[today]||1)-1)}
+save();renderAll();showToast(S.solved[id]?"✅ Problem solved!":"↩ Marked unsolved","success")}
+function fTopic(t){S.filter.topic=t;S.filter.page=1;document.getElementById("sidebar").classList.remove("open");document.getElementById("sidebarOverlay").classList.remove("open");rSidebar();rControls();rProblems()}
+function fStatus(s){S.filter.status=s;S.filter.page=1;rControls();rProblems();rSidebar()}
+function fDiff(d){S.filter.diff=S.filter.diff===d?"All":d;S.filter.page=1;rControls();rProblems()}
+function sortBy(v){S.filter.sort=v;S.filter.page=1;rProblems()}
+function goPage(pg){const f=getFiltered(),mx=Math.ceil(f.length/PS);if(pg<1||pg>mx)return;S.filter.page=pg;rProblems()}
+document.getElementById("searchInput").addEventListener("input",function(){S.filter.search=this.value;S.filter.page=1;rProblems()});
+function markAll(){const f=getFiltered(),all=f.every(p=>S.solved[p.id]);f.forEach(p=>{if(all)delete S.solved[p.id];else S.solved[p.id]=true});save();renderAll();showToast(all?"↩ Unmarked all":"✅ All marked solved!","success")}
+function showReset(){document.getElementById("resetModal").classList.add("open")}
+document.getElementById("cancelReset").onclick=()=>document.getElementById("resetModal").classList.remove("open");
+document.getElementById("confirmReset").onclick=()=>{S.solved={};S.times={};S.timers={};S.streak={current:0,longest:0,lastDate:null,freezes:0};S.solvedDates={};save();renderAll();document.getElementById("resetModal").classList.remove("open");showToast("Progress reset","info")}
+function exportJ(){const d={solved:S.solved,times:S.times,streak:S.streak,solvedDates:S.solvedDates,exportedAt:new Date().toISOString()};const b=new Blob([JSON.stringify(d,null,2)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="dsa_progress.json";a.click();showToast("Exported!","success")}
+function importJ(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{try{const d=JSON.parse(ev.target.result);if(d.solved)S.solved=d.solved;if(d.times)S.times=d.times;if(d.streak)S.streak=d.streak;if(d.solvedDates)S.solvedDates=d.solvedDates;save();renderAll();showToast("Imported!","success")}catch(err){showToast("Invalid JSON","error")}};r.readAsText(f);e.target.value=""}
+function addFreeze(){S.streak.freezes++;save();rOverview();rStreak();showToast("🧊 Freeze added!","info")}
+function toggleTimer(id){if(S.timers[id]&&S.timers[id].interval){clearInterval(S.timers[id].interval);const el=Math.floor((Date.now()-S.timers[id].start)/1000);S.times[id]=(S.times[id]||0)+el;S.timers[id]={interval:null};save();const b=document.querySelector(`#row-${id} .tsb`);if(b){b.textContent="▶";b.classList.remove("running")}const t=document.getElementById(`time-${id}`);if(t)t.textContent=fmtTime(S.times[id])}else{S.timers[id]={start:Date.now(),interval:null};S.timers[id].interval=setInterval(()=>{if(!S.timers[id]||!S.timers[id].interval)return;const el=Math.floor((Date.now()-S.timers[id].start)/1000),tot=(S.times[id]||0)+el,t=document.getElementById(`time-${id}`);if(t)t.textContent=fmtTime(tot)},1000);const b=document.querySelector(`#row-${id} .tsb`);if(b){b.textContent="⏹";b.classList.add("running")}showToast("⏱️ Timer started","info")}}
+function applyTheme(){document.documentElement.setAttribute("data-theme",S.theme);document.querySelectorAll(".theme-btn").forEach(b=>b.classList.toggle("active",b.dataset.theme===S.theme));document.querySelectorAll(".accent-dot").forEach(d=>d.classList.toggle("active",d.dataset.color===S.accent));document.documentElement.style.setProperty("--accent",S.accent);const h=S.accent.replace("#",""),r=parseInt(h.substring(0,2),16),g=parseInt(h.substring(2,4),16),b=parseInt(h.substring(4,6),16);document.documentElement.style.setProperty("--accent-rgb",`${r},${g},${b}`)}
+document.querySelectorAll(".theme-btn").forEach(btn=>btn.addEventListener("click",()=>{S.theme=btn.dataset.theme;save();applyTheme()}));
+document.getElementById("accentPicker").addEventListener("click",e=>{const d=e.target.closest(".accent-dot");if(!d)return;S.accent=d.dataset.color;save();applyTheme();rStats()});
+document.getElementById("hamburger").addEventListener("click",()=>{document.getElementById("sidebar").classList.toggle("open");document.getElementById("sidebarOverlay").classList.toggle("open")});
+document.getElementById("sidebarOverlay").addEventListener("click",()=>{document.getElementById("sidebar").classList.remove("open");document.getElementById("sidebarOverlay").classList.remove("open")});
+function showToast(msg,type="info"){const t=document.createElement("div");t.className=`toast ${type}`;t.textContent=msg;document.getElementById("toastContainer").appendChild(t);setTimeout(()=>{t.style.opacity="0";t.style.transform="translateX(18px)";t.style.transition="all 0.3s";setTimeout(()=>t.remove(),300)},2500)}
+applyTheme();renderAll();
+</script>
+</body>
+</html>
